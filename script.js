@@ -4,9 +4,24 @@ const quoteTextEl = document.getElementById('quote')
 const quoteAuthorEl = document.getElementById('author')
 const twitterBtn = document.getElementById('twitter')
 const newQuoteBtn = document.getElementById('new-quote')
+const loader = document.getElementById('loader')
+
+// shows the Loader and hides the Quote Container on the UI 
+const loadingActivate = function() {
+    quoteContainer.hidden = true
+    loader.hidden = false
+} 
+
+// shows the container and hides the Quote Container on the UI 
+const loadingDeactivate = function() {
+    quoteContainer.hidden = false
+    loader.hidden = true   
+}
 
 // Get Quote from API
 async function getQuote() {
+    loadingActivate()
+    
     // this URL prevents error while accessing the API - which is common for free APIs because of the traffic
     const proxyURL = 'https://cors-anywhere.herokuapp.com/'
 
@@ -30,7 +45,7 @@ async function getQuote() {
         } else {
             quoteAuthorEl.innerText = data.quoteAuthor
         }        
-        
+        loadingDeactivate()
     } catch (error) {
         getQuote()
     }
