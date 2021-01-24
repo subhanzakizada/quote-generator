@@ -6,21 +6,17 @@ const twitterBtn = document.getElementById('twitter')
 const newQuoteBtn = document.getElementById('new-quote')
 const loader = document.getElementById('loader')
 
-// shows the Loader and hides the Quote Container on the UI 
-const loadingActivate = function() {
-    quoteContainer.hidden = true
-    loader.hidden = false
-} 
+loader.hidden = true
 
-// shows the container and hides the Quote Container on the UI 
-const loadingDeactivate = function() {
-    quoteContainer.hidden = false
-    loader.hidden = true   
-}
+// shows the Loader and hides the Quote container or opposite
+const loadingShowOrHide = function() {
+    quoteContainer.hidden = !quoteContainer.hidden ? true : false
+    loader.hidden = loader.hidden ? false : true
+} 
 
 // Get Quote from API
 async function getQuote() {
-    loadingActivate()
+    loadingShowOrHide()
     
     // this URL prevents error while accessing the API - which is common for free APIs because of the traffic
     const proxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -28,6 +24,7 @@ async function getQuote() {
     // API url
     const quoteURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json'
     try {
+        
         const response = await fetch(proxyURL + quoteURL)
         const data = await response.json()
 
@@ -45,7 +42,7 @@ async function getQuote() {
         } else {
             quoteAuthorEl.innerText = data.quoteAuthor
         }        
-        loadingDeactivate()
+        loadingShowOrHide()
     } catch (error) {
         getQuote()
     }
