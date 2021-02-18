@@ -5,21 +5,20 @@ const quoteAuthorEl = document.getElementById('author')
 const twitterBtn = document.getElementById('twitter')
 const newQuoteBtn = document.getElementById('new-quote')
 const loader = document.getElementById('loader')
-
-loader.hidden = true
+let counter = 0
 
 // shows the Loader and hides the Quote container or opposite
 const loadingShowOrHide = function() {
-    quoteContainer.hidden = !quoteContainer.hidden ? true : false
-    loader.hidden = loader.hidden ? false : true
+    quoteContainer.hidden = !quoteContainer.hidden
+    loader.hidden = !loader.hidden
 } 
 
 // Get Quote from API
 async function getQuote() {
     loadingShowOrHide()
     
-    // this URL prevents error while accessing the API - which is common for free APIs because of the traffic
-    const proxyURL = 'https://cors-anywhere.herokuapp.com/'
+    // this URL prevents error while accessing the API - which is common for free APIs because of the traffic -- CORS PROXY URL:
+    const proxyURL = 'https://secret-ocean-49799.herokuapp.com/'
 
     // API url
     const quoteURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json'
@@ -42,9 +41,14 @@ async function getQuote() {
         } else {
             quoteAuthorEl.innerText = data.quoteAuthor
         }        
+        counter = 0
         loadingShowOrHide()
     } catch (error) {
-        getQuote()
+        if(counter < 5) getQuote()
+        else {
+            quoteAuthorEl.innerText = 'Couldn\'t get the data. Please try again in couple minutes.'
+            loadingShowOrHide()
+        }
     }
 }
 
